@@ -13,15 +13,13 @@
 }
 
 body {
-    background: #ff7b00; /* Bright orange — NO background.png needed! */
+    background: #ff7b00;
     color: white;
     text-align: center;
     min-height: 100vh;
 }
 
-/* =========================
-   TOP YELLOW HEADER BAR
-========================= */
+/* TOP YELLOW HEADER BAR */
 .top-bar {
     background: #ffcc00;
     padding: 12px 30px;
@@ -31,7 +29,6 @@ body {
     flex-wrap: wrap;
 }
 
-/* LOGO — Rec + Head + Paint */
 .logo-image {
     height: 55px;
     width: auto;
@@ -48,9 +45,7 @@ body {
     text-decoration: underline;
 }
 
-/* =========================
-   MAIN CONTENT
-========================= */
+/* MAIN CONTENT */
 .content {
     padding-top: 80px;
 }
@@ -67,12 +62,17 @@ h1 {
     color: white;
     text-shadow: 3px 3px 0 #000;
     margin-top: 10px;
-    margin-bottom: 60px;
+    margin-bottom: 30px;
 }
 
-/* =========================
-   DOWNLOAD BUTTON — WITH LOGO
-========================= */
+.download-note {
+    font-size: 22px;
+    color: #fff;
+    margin-bottom: 40px;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+}
+
+/* DOWNLOAD BUTTON */
 .download-btn {
     background: #ff4400;
     color: white;
@@ -94,15 +94,12 @@ h1 {
     transform: translateY(-3px);
 }
 
-/* Small logo icon inside button */
 .btn-logo {
     height: 40px;
     width: auto;
 }
 
-/* =========================
-   BOTTOM CREDIT
-========================= */
+/* BOTTOM CREDIT */
 .credit {
     position: fixed;
     bottom: 20px;
@@ -112,15 +109,14 @@ h1 {
     text-shadow: 2px 2px 0 #000;
 }
 
-/* =========================
-   MOBILE RESPONSIVE
-========================= */
+/* MOBILE */
 @media (max-width: 900px) {
     .top-bar { flex-direction: column; gap: 10px; padding: 15px; }
     .logo-image { height: 45px; }
     .top-links a { font-size: 18px; margin: 0 6px; }
     h1 { font-size: 42px; }
     .subtitle { font-size: 30px; }
+    .download-note { font-size: 16px; padding: 0 15px; }
     .download-btn { font-size: 20px; padding: 14px 25px; gap: 12px; }
     .btn-logo { height: 32px; }
     .credit { font-size: 18px; }
@@ -129,7 +125,7 @@ h1 {
 </head>
 <body>
 
-<!-- TOP YELLOW BAR — YOUR LOGO HERE -->
+<!-- TOP YELLOW BAR -->
 <div class="top-bar">
     <img src="Logo.png" alt="Rec Paint" class="logo-image">
     <div class="top-links">
@@ -144,21 +140,19 @@ h1 {
     <h1>Welcome to WitherNet!</h1>
     <p class="subtitle">Play Rec Paint Free!</p>
 
-    <!-- DOWNLOAD BUTTON — LOGO + TEXT -->
-    <button class="download-btn" onclick="openDownload()">
-        <img src="Logo.png" alt="" class="btn-logo">
-        DOWNLOAD FOR ANDROID
-    </button>
+    <p class="download-note">📦 Download is a ZIP file — extract it to install!</p>
+
+    <!-- YOUR MEDIAFIRE DOWNLOAD LINK -->
+    <a href="https://www.mediafire.com/file/blhv26onu0ikkzu/RecPaint-2D-Unzip-Me.zip/file" target="_blank" style="text-decoration: none;">
+        <button class="download-btn">
+            <img src="Logo.png" alt="" class="btn-logo">
+            DOWNLOAD FOR ANDROID
+        </button>
+    </a>
 </div>
 
 <!-- BOTTOM CREDIT -->
 <div class="credit">Made by @Witherstormboss15</div>
-
-<script>
-function openDownload() {
-    window.open("https://youtube.com/post/UgkxrY2MlojfyGA56JaYiKqtTwyOGf0e4KlL?si=TapHbSju5_TFdJ4X", "_blank");
-}
-</script>
 
 </body>
 </html>
