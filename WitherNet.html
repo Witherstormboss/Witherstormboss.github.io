@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rec Paint - @WitherstormBoss15</title>
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ffad45;
+    color: #222;
+}
+
+/* =========================
+   TOP NAVIGATION
+========================= */
+.navbar {
+    height: 72px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.25);
+    position: relative;
+    z-index: 10;
+}
+
+/* LOGO — FAR LEFT */
+.logo {
+    width: 185px;
+    max-height: 55px;
+    object-fit: contain;
+    /* ✅ EXACT FILENAME */
+    content: url("Logo.png");
+}
+
+/* SEARCH — CENTER */
+.search {
+    width: 420px;
+    height: 42px;
+    border: none;
+    border-bottom: 2px solid #cccccc;
+    outline: none;
+    font-size: 17px;
+    padding: 0 8px;
+    color: #555;
+    text-align: center;
+}
+.search::placeholder {
+    color: #999;
+}
+
+/* DOWNLOAD BUTTON — TOP RIGHT */
+.download {
+    border: 2px solid #e26b45;
+    background: white;
+    color: #d85d39;
+    padding: 9px 18px;
+    border-radius: 11px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.15s;
+}
+.download:hover {
+    background: #e26b45;
+    color: white;
+}
+
+/* =========================
+   YELLOW ANNOUNCEMENT BOX
+========================= */
+.announcement {
+    height: 73px;
+    background: #ffd500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    color: #b86800;
+    padding: 0 20px;
+    line-height: 1.4;
+}
+
+/* =========================
+   MAIN HERO
+========================= */
+.hero {
+    min-height: calc(100vh - 145px);
+    background-color: #ffad45;
+    /* ✅ EXACT FILENAME */
+    background-image: url("background.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-content {
+    width: 86%;
+    max-width: 1350px;
+    margin: 0 auto;
+    padding-top: 105px;
+    padding-left: 35px;
+}
+
+.hero-title {
+    color: #172c91;
+    font-size: clamp(55px, 6vw, 82px);
+    line-height: 1.08;
+    font-weight: 700;
+    max-width: 650px;
+    margin-bottom: 25px;
+}
+
+.hero-subtitle {
+    color: #172c91;
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 18px;
+}
+
+.hero-description {
+    color: #26316d;
+    font-size: 18px;
+    line-height: 1.4;
+    max-width: 500px;
+    margin-bottom: 55px;
+}
+
+.android-button {
+    width: 460px;
+    max-width: 100%;
+    height: 75px;
+    border: none;
+    border-radius: 14px;
+    background: #fa350b;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 3px 7px rgba(0,0,0,0.18);
+    transition: 0.15s;
+}
+.android-button:hover {
+    background: #df2d08;
+    transform: translateY(-2px);
+}
+
+.footer {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: rgba(23,44,145,0.65);
+    font-size: 14px;
+}
+
+/* =========================
+   MOBILE RESPONSIVE
+========================= */
+@media (max-width: 900px) {
+    .navbar { padding: 0 20px; }
+    .logo { width: 140px; }
+    .search { width: 220px; font-size: 15px; }
+    .announcement { font-size: 13px; padding: 0 12px; }
+    .hero-content {
+        width: 90%;
+        padding-left: 0;
+        padding-top: 75px;
+    }
+    .hero-title { font-size: 50px; }
+    .hero-description { font-size: 17px; }
+}
+
+@media (max-width: 520px) {
+    .navbar { height: 62px; padding: 0 10px; }
+    .logo { width: 115px; }
+    .search { width: 120px; font-size: 14px; }
+    .download { padding: 7px 10px; font-size: 12px; }
+    .announcement { font-size: 11.5px; line-height: 1.3; height: auto; padding: 10px 12px; }
+    .hero { min-height: calc(100vh - 130px); }
+    .hero-content { padding-top: 50px; }
+    .hero-title { font-size: 40px; }
+    .hero-subtitle { font-size: 18px; }
+    .hero-description { font-size: 16px; }
+    .android-button { width: 100%; height: 65px; font-size: 18px; }
+}
+</style>
+</head>
+<body>
+
+<!-- =========================
+     NAVIGATION — Logo Left, Search Middle, Download Right
+========================= -->
+<header class="navbar">
+    <!-- ✅ Logo at Far Left — EXACT FILENAME: Logo.png -->
+    <img src="Logo.png" class="logo" alt="Rec Paint" onerror="this.style.display='none'">
+
+    <!-- ✅ Search Box in Center -->
+    <input class="search" type="text" placeholder="Search...">
+
+    <!-- ✅ Download Button at Top Right -->
+    <button class="download" onclick="openDownload()">DOWNLOAD</button>
+</header>
+
+<!-- =========================
+     YELLOW MESSAGE BOX
+========================= -->
+<div class="announcement">
+    Rec Paint is a 2D Rec Room revival for Android, other ports may release in the future.
+</div>
+
+<!-- =========================
+     MAIN HERO SECTION
+========================= -->
+<section class="hero">
+    <div class="hero-content">
+        <h1 class="hero-title">Rec Paint</h1>
+        <div class="hero-subtitle">by @WitherstormBoss15</div>
+        <p class="hero-description">
+            Rec Paint is a community experience
+            where you can build, create and explore
+            amazing things with your friends.
+        </p>
+        <button class="android-button" onclick="openDownload()">
+            DOWNLOAD FOR ANDROID
+        </button>
+    </div>
+    <div class="footer">Rec Paint · @WitherstormBoss15</div>
+</section>
+
+<script>
+// ✅ Opens your YouTube post in new tab
+function openDownload() {
+    window.open("http://youtube.com/post/UgkxrY2MlojfyGA56JaYiKqtTwyOGf0e4KlL?si=TapHbSju5_TFdJ4X", "_blank");
+}
+</script>
+
+</body>
+</html>
