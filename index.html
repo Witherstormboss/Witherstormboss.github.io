@@ -62,41 +62,57 @@ h1 {
     color: white;
     text-shadow: 3px 3px 0 #000;
     margin-top: 10px;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
-.download-note {
+.play-note {
     font-size: 22px;
     color: #fff;
-    margin-bottom: 40px;
+    margin-bottom: 25px;
     text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
 }
 
-/* DOWNLOAD BUTTON */
-.download-btn {
+.download-note {
+    font-size: 18px;
+    color: #fff;
+    margin-bottom: 40px;
+    opacity: 0.9;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+}
+
+/* BUTTON STYLE */
+.btn {
     background: #ff4400;
     color: white;
-    font-size: 30px;
+    font-size: 26px;
     font-weight: bold;
     border: none;
     border-radius: 16px;
-    padding: 18px 50px;
+    padding: 16px 40px;
     display: inline-flex;
     align-items: center;
-    gap: 20px;
+    gap: 18px;
     cursor: pointer;
     box-shadow: 0 6px 12px rgba(0,0,0,0.3);
     transition: 0.15s;
+    margin-bottom: 20px;
 }
 
-.download-btn:hover {
+.btn:hover {
     background: #e63d00;
     transform: translateY(-3px);
 }
 
 .btn-logo {
-    height: 40px;
+    height: 38px;
     width: auto;
+}
+
+.divider {
+    font-size: 20px;
+    color: #ffcc00;
+    margin: 10px 0;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.4);
 }
 
 /* BOTTOM CREDIT */
@@ -116,9 +132,10 @@ h1 {
     .top-links a { font-size: 18px; margin: 0 6px; }
     h1 { font-size: 42px; }
     .subtitle { font-size: 30px; }
-    .download-note { font-size: 16px; padding: 0 15px; }
-    .download-btn { font-size: 20px; padding: 14px 25px; gap: 12px; }
-    .btn-logo { height: 32px; }
+    .play-note { font-size: 16px; padding: 0 15px; }
+    .download-note { font-size: 14px; padding: 0 15px; }
+    .btn { font-size: 18px; padding: 12px 22px; gap: 10px; }
+    .btn-logo { height: 30px; }
     .credit { font-size: 18px; }
 }
 </style>
@@ -140,11 +157,21 @@ h1 {
     <h1>Welcome to WitherNet!</h1>
     <p class="subtitle">Play Rec Paint Free!</p>
 
-    <p class="download-note">📦 Download is a ZIP file — extract it to install!</p>
+    <!-- ✅ PLAY ONLINE BUTTON → GOES TO LOADING PAGE (main.html) -->
+    <p class="play-note">✅ Instantly — no download needed!</p>
+    <a href="main.html" style="text-decoration: none;">
+        <button class="btn">
+            <img src="Logo.png" alt="" class="btn-logo">
+            PLAY NOW — FREE!
+        </button>
+    </a>
 
-    <!-- YOUR MEDIAFIRE DOWNLOAD LINK -->
+    <div class="divider">━━━━ OR ━━━━</div>
+
+    <!-- ✅ DOWNLOAD BUTTON → MEDIAFIRE -->
+    <p class="download-note">📦 For full game — unzip and install APK!</p>
     <a href="https://www.mediafire.com/file/blhv26onu0ikkzu/RecPaint-2D-Unzip-Me.zip/file" target="_blank" style="text-decoration: none;">
-        <button class="download-btn">
+        <button class="btn">
             <img src="Logo.png" alt="" class="btn-logo">
             DOWNLOAD FOR ANDROID
         </button>
