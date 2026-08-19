@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, orientation=landscape">
-    <title>Rec Room - Connection Fault Screen</title>
+    <title>Rec Room - Standalone Hub</title>
     <style>
         /* Base setup to lock content alignment and expand to absolute edge boundaries */
         * {
             box-sizing: border-box;
         }
-
+        
         body, html {
             margin: 0;
             padding: 0;
@@ -18,7 +18,7 @@
             background-color: black;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: center; 
             overflow: hidden;
             font-family: sans-serif;
             color: white;
@@ -26,14 +26,14 @@
             position: relative;
         }
 
-        /* Fully Stretched Background Layer - Forces GIF to match 100% of any phone display screen */
+        /* 1. Fully Stretched Background Layer */
         #bgLayer {
             position: absolute;
             top: 0; left: 0; 
             width: 100vw; 
             height: 100vh;
             background-image: url('loading_background.gif');
-            background-size: 100% 100%; 
+            background-size: 100% 100%;
             background-position: center;
             background-repeat: no-repeat;
             opacity: 0;
@@ -41,7 +41,7 @@
             z-index: 1;
         }
 
-        /* Loading Phase Container (Responsive Center Grid) */
+        /* 2. Loading Phase Container (Responsive Center Grid) */
         #loadingContainer {
             position: relative;
             display: flex;
@@ -55,13 +55,11 @@
             height: 100%;
         }
 
-        /* Entry Keyframes: Slides down from top into center */
         @keyframes slideDownIn {
             0% { transform: translateY(-100vh); opacity: 0; }
             100% { transform: translateY(0); opacity: 1; }
         }
 
-        /* Exit Keyframes: Slides up from center off-screen */
         @keyframes slideUpOut {
             0% { transform: translateY(0); opacity: 1; }
             100% { transform: translateY(-100vh); opacity: 0; }
@@ -75,7 +73,7 @@
             animation: slideUpOut 1s cubic-bezier(0.5, 0, 0.75, 0) forwards;
         }
 
-        /* Game Logo scales relative to total width of viewport display */
+        /* Game Logo scales relative to total width of viewport */
         #gameLogo {
             width: 45vw; 
             max-width: 500px;
@@ -84,17 +82,15 @@
         }
 
         #statusText {
-            font-size: 3.5vh; /* Dynamically sizes font height based on phone screen scale */
+            font-size: 3.5vh; 
             font-weight: bold;
             margin-top: 3.5vh; 
             margin-bottom: 0px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
-            color: #ffffff;
             text-align: center;
-            padding: 0 5vw; /* Soft edge spacing fallback to prevent screen wrapping clippings */
         }
 
-        /* Stretches loading bar to match 70% of whatever mobile display canvas it sits on */
+        /* Loading bar stretches to match 70% of the screen */
         .bar-container {
             position: relative;
             background-image: url('loading_empty.png'); 
@@ -115,52 +111,111 @@
             transition: width 0.1s linear;
         }
 
-        /* Image-based button styling with responsive layout sizing rules */
-        #retryBtn {
+        /* 3. Login Menu Container */
+        #loginContainer {
             display: none;
-            width: 28vw;
-            max-width: 240px;
-            height: auto;
-            margin-top: 4vh;
+            position: absolute;
+            right: 5vw; 
+            z-index: 3;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        /* Expanded Landscape Play Box Window Frame */
+        .play-menu-box {
+            position: relative;
+            background-image: url('play_menu_box.png'); 
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: transparent;
+            width: 45vw; 
+            min-width: 320px;
+            max-width: 620px;
+            height: 60vh; 
+            min-height: 260px;
+            max-height: 380px;
+            box-sizing: border-box;
+        }
+
+        /* Absolute Inner Alignment Layer */
+        .box-content-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        /* Wide Landscape Play Button */
+        .play-btn {
+            background-image: url('play_button.png'); 
+            background-size: 100% 100%; 
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: transparent;
+            border: none;
+            
+            width: 22vw;  
+            min-width: 180px;
+            max-width: 300px;
+            height: 9vh;  
+            min-height: 40px;
+            max-height: 68px;
+            
+            outline: none;
+            margin-top: auto; 
+            margin-bottom: 12.5vh; 
+            
             cursor: pointer;
             transition: transform 0.1s ease;
         }
 
-        /* Soft press-down feedback visual effect */
-        #retryBtn:active {
-            transform: scale(0.95) translateY(2px);
+        .play-btn:active {
+            transform: scale(0.94);
         }
     </style>
 </head>
 <body>
 
+    <!-- Main Menu Loop Track Audio -->
     <audio id="bgMusic" autoplay loop src="menu.wav"></audio>
 
+    <!-- Background Asset Layer -->
     <div id="bgLayer"></div>
 
-    <!-- Interface Scene: Loading Container Grid -->
+    <!-- Interface Scene 1: Loading (Centered) -->
     <div id="loadingContainer">
         <img id="gameLogo" src="Logo_RecRoom_Horizontal.png">
-        <!-- Loader empty container maps first to keep text underneath layout boundaries -->
-        <div class="bar-container" id="loadingBarWrapper">
+        <div class="bar-container" id="logoWrapper">
             <div class="bar-fill" id="fillTracker"></div>
         </div>
-        <!-- Clean solid white status label text block sits safely on bottom -->
         <div id="statusText">Connecting to server...</div>
-        <!-- Rec Room custom dynamic graphic image button asset source element -->
-        <img id="retryBtn" src="Retry.png" alt="Retry Connection">
     </div>
 
+    <!-- Interface Scene 2: Menu Grid -->
+    <div id="loginContainer">
+        <div class="play-menu-box">
+            <div class="box-content-layer">
+                <button class="play-btn" onclick="launchGameScreen()"></button>
+            </div>
+        </div> 
+    </div>
+
+    <!-- FIXED SCRIPT BLOCK: All JavaScript logic is contained inside this tag -->
     <script>
         let bg = document.getElementById('bgLayer');
+        let logo = document.getElementById('gameLogo');
         let text = document.getElementById('statusText');
+        let wrapper = document.getElementById('logoWrapper');
         let fill = document.getElementById('fillTracker');
-        let barWrapper = document.getElementById('loadingBarWrapper');
         let loadingScene = document.getElementById('loadingContainer');
+        let loginScene = document.getElementById('loginContainer');
         let music = document.getElementById('bgMusic');
-        let retryBtn = document.getElementById('retryBtn');
 
-        let targetDuration = 2000; // 2 seconds to scale loader up to 20%
+        let totalDuration = 10000; 
         let elapsedTime = 0;
         let tickerInterval;
 
@@ -171,91 +226,70 @@
         window.addEventListener('load', simulateNativeTouch);
         document.body.addEventListener('click', () => { music.play(); }, { once: true });
 
-        // Phase 1: 2-second initial black overlay pause loop
         setTimeout(() => {
             simulateNativeTouch();
             bg.style.opacity = "1";
-            
-            // Phase 2: Fade layout items down into the center viewport grid area
             setTimeout(() => {
                 loadingScene.classList.add('animate-entry');
-                
                 setTimeout(() => {
-                    startErrorBuildTracking();
+                    startProgressBarTracking();
                 }, 1000);
             }, 1000);
         }, 2000);
 
-        function startErrorBuildTracking() {
-            // Reset variable states and visual dependencies back to startup configuration
-            elapsedTime = 0;
-            fill.style.width = "0%";
-            barWrapper.style.display = "block";
-            text.innerText = "Connecting to server...";
-            retryBtn.style.display = "none";
-
+        function startProgressBarTracking() {
+            let updateSpeed = 100; // Update progress bar every 100ms
+            
             tickerInterval = setInterval(() => {
-                elapsedTime += 100;
+                elapsedTime += updateSpeed;
+                let currentPercentage = (elapsedTime / totalDuration) * 100;
                 
-                // Calculates scaling up to 20% across 2 full seconds (2000ms)
-                let currentProgress = (elapsedTime / targetDuration) * 20;
-                
-                if (currentProgress <= 20) {
-                    fill.style.width = currentProgress + "%";
-                }
-
-                if (elapsedTime >= targetDuration) {
+                if (currentPercentage >= 100) {
+                    currentPercentage = 100;
                     clearInterval(tickerInterval);
+                    fill.style.width = "100%";
+                    text.innerText = "Done!";
+                    setTimeout(transitionToLoginBox, 1000);
+                } else {
+                    fill.style.width = currentPercentage + "%";
                     
-                    // Step 1: Trigger animation of it going UP and off screen
-                    loadingScene.classList.remove('animate-entry');
-                    loadingScene.classList.add('animate-exit');
-                    
-                    // Step 2: Wait exactly 1 second for the slide up to finish + 2 seconds of pause (3000ms total)
-                    setTimeout(() => {
-                        
-                        // Step 3: Hide the stretching loading bar container while it is off screen
-                        barWrapper.style.display = "none";
-                        
-                        // Step 4: Swap status string to your requested white erro summer message text
-                        text.innerText = "Failed to Download required resources, If this error continues try android.";
-
-                        
-                        // Step 4b: Surface the failure retry choice action image button element
-                        retryBtn.style.display = "inline-block";
-                        
-                        // Step 5: Trigger the animation to bring it back DOWN from the top into the center
-                        loadingScene.classList.remove('animate-exit');
-                        
-                        // Break rendering frame to ensure layout engine catches state reset
-                        setTimeout(() => {
-                            loadingScene.classList.add('animate-entry');
-                        }, 50);
-                        
-                    }, 3000);
+                    // Fixed dynamic update text logic states
+                    if (currentPercentage > 75) {
+                        text.innerText = "Downloading Player Data...";
+                    } else if (currentPercentage > 40) {
+                        text.innerText = "Downloading Room Data...";
+                    } else if (currentPercentage > 15) {
+                        text.innerText = "Downloading Textures...";
+                    }
                 }
-            }, 100);
+            }, updateSpeed);
         }
 
-        // Catch click inputs on your appended retry image button element
-        retryBtn.addEventListener('click', () => {
-            simulateNativeTouch();
-
-            // Clear old container entry flags and send the layout out of view
+        function transitionToLoginBox() {
+            // Animate the loading layout container off the screen upwards
             loadingScene.classList.remove('animate-entry');
             loadingScene.classList.add('animate-exit');
-
-            // Wait for slide exit animation sequence to finalize (1000ms total duration)
+            
             setTimeout(() => {
-                loadingScene.classList.remove('animate-exit');
+                loadingScene.style.display = "none";
+                loginScene.style.display = "block";
                 
-                // Refresh canvas engine state thread before re-entering layout viewports
+                // Fade the Play menu box into view smoothly
                 setTimeout(() => {
-                    loadingScene.classList.add('animate-entry');
-                    startErrorBuildTracking();
+                    loginScene.style.opacity = "1";
                 }, 50);
             }, 1000);
-        });
+        }
+
+        // FIXED INTEGRATION LAUNCH ROUTER
+        function launchGameScreen() {
+            // Checks if running under AndroidX WebViewAssetLoader hosting environment wrapper
+            if (window.location.origin.includes("androidplatform")) {
+                window.location.href = "https://androidplatform.net";
+            } else {
+                window.location.href = "game.html";
+            }
+        }
     </script>
 </body>
 </html>
