@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Killer Lobby</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        body, html { width: 100%; height: 100%; overflow: hidden; background: #000000; font-family: sans-serif; color: #ffffff; }
+        
+        #bg { position: absolute; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+        #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; display: flex; flex-direction: column; justify-content: space-between; padding: 30px; }
+        
+        /* Top Currency & Profile HUD Row */
+        header { display: flex; justify-content: flex-end; align-items: center; gap: 25px; position: relative; }
+        .bp-container, .profile-container { display: flex; align-items: center; gap: 10px; background: #000000; padding: 5px 15px; }
+        .hud-icon { height: 35px; width: auto; }
+        
+        /* Custom image asset placed top right but closer to the center area */
+        .perk-layout-holder {
+            position: absolute;
+            top: 60px;
+            right: 320px;
+            width: 150px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .perk-layout-img { width: 100%; height: 100%; object-fit: contain; }
+
+        /* Left Hand Menu Layout Navigation Panels */
+        main { display: flex; height: 75%; align-items: flex-end; gap: 40px; }
+        .solid-black-box { width: 280px; background: #000000; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        
+        .nav-btn { display: flex; align-items: center; gap: 15px; background: none; border: none; cursor: pointer; text-align: left; width: 100%; }
+        .nav-icon { width: 50px; height: 50px; object-fit: fill; }
+        .nav-text { color: #ffffff; font-size: 16px; font-weight: bold; letter-spacing: 1px; }
+
+        /* Matchmaking Ticker Footer Row Controls */
+        footer { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+        #queue-text { color: #ff3333; font-size: 16px; font-weight: bold; min-height: 20px; text-shadow: 1px 1px 2px #000; }
+        .action-btn { background: none; border: none; cursor: pointer; }
+        .action-btn img { height: 65px; width: auto; }
+    </style>
+</head>
+<body>
+
+    <img id="bg" src="Background.gif" alt="Campfire Background">
+
+    <div id="ui-layer">
+        <header>
+            <div class="perk-layout-holder">
+                <img class="perk-layout-img" src="perk_layout.png" alt="Perk Layout" onerror="this.style.display='none'">
+            </div>
+            <div class="bp-container">
+                <img class="hud-icon" src="Bloodpoints.png" alt="BP">
+                <span id="bp-val">50,000</span>
+            </div>
+            <div class="profile-container">
+                <img class="hud-icon" src="Player.png" alt="Profile">
+                <span>KillerName</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="solid-black-box">
+                <button class="nav-btn" onclick="window.location.href='bloodweb.html'">
+                    <img class="nav-icon" src="Bloodweb.png" alt="Bloodweb">
+                    <span class="nav-text">BLOODWEB</span>
+                </button>
+            </div>
+
+            <div class="solid-black-box">
+                <button class="nav-btn">
+                    <img class="nav-icon" src="Loadout.png" alt="Loadout">
+                    <span class="nav-text">LOADOUT</span>
+                </button>
+            </div>
+
+            <div class="solid-black-box">
+                <button class="nav-btn">
+                    <img class="nav-icon" src="Player.png" alt="Customize">
+                    <span class="nav-text">CUSTOMISE</span>
+                </button>
+            </div>
+        </main>
+
+        <footer>
+            <div id="queue-text"></div>
+            <div style="display: flex; gap: 20px;">
+                <button class="action-btn" onclick="window.location.href='menu.html'"><img src="Back.png" alt="Back"></button>
+                <button class="action-btn" onclick="startQueue()"><img src="Start.png" alt="Start"></button>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        if(!localStorage.getItem('bloodpoints')) { localStorage.setItem('bloodpoints', '50000'); }
+        document.getElementById('bp-val').textContent = Number(localStorage.getItem('bloodpoints')).toLocaleString();
+
+        let countdownTimer = null;
+        function startQueue() {
+            if (countdownTimer) return;
+            let secondsLeft = 19;
+            const outputText = document.getElementById('queue-text');
+            outputText.textContent = `Estimated que time: ${secondsLeft}s`;
+
+            countdownTimer = setInterval(() => {
+                secondsLeft--;
+                outputText.textContent = `Estimated que time: ${secondsLeft}s`;
+                if(secondsLeft <= 0) {
+                    clearInterval(countdownTimer);
+                    setTimeout(() => { window.location.href = 'game.html'; }, 500);
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

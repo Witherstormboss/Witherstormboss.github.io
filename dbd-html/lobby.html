@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survivor Lobby</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+            font-family: Arial, sans-serif;
+        }
+        
+        /* Background Layer */
+        .background-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('Background.gif');
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
+        }
+
+        /* Three.js Canvas Container */
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none; /* Let clicks pass through to UI buttons */
+        }
+
+        /* Main UI Wrapper */
+        .ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+        }
+
+        /* Top Right Player Stats Area */
+        .top-right-hud {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .currency-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #ffffff;
+            font-size: 32px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px #000;
+        }
+        .bloodpoints-icon {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+        .player-profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #ffffff;
+            text-align: center;
+        }
+        .profile-img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+        .player-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 4px;
+            text-shadow: 2px 2px 4px #000;
+        }
+        .player-level {
+            font-size: 12px;
+            color: #ccc;
+            text-shadow: 1px 1px 2px #000;
+        }
+
+        /* Left Action Sidebar Menu Boxes */
+        .left-menu {
+            position: absolute;
+            top: 50px;
+            left: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .menu-box {
+            width: 100px;
+            height: 100px;
+            background-color: #000000; /* Non-image solid black color as requested */
+            border: 2px dashed rgba(255, 255, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .menu-icon {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+
+        /* Center Survivor Text Slots '+' */
+        .survivor-slots {
+            position: absolute;
+            top: 50%;
+            left: 300px;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 60px;
+        }
+        .plus-slot {
+            color: #ffffff;
+            font-size: 120px;
+            font-weight: bold;
+            opacity: 0.8;
+            text-shadow: 4px 4px 8px #000;
+            line-height: 1;
+        }
+
+        /* Bottom Right Navigation Panel */
+        .bottom-right-panel {
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 15px;
+        }
+        .queue-text {
+            color: #ff3333;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 4px #000;
+            letter-spacing: 0.5px;
+            display: none; /* Appears dynamically */
+        }
+        .nav-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            outline: none;
+        }
+        .btn-img-start {
+            width: 240px;
+            height: auto;
+            display: block;
+        }
+
+        /* Bottom Left Navigation Back Button */
+        .bottom-left-panel {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+        }
+        .btn-img-back {
+            width: 160px;
+            height: auto;
+            display: block;
+        }
+    </style>
+    <!-- Three.js Libraries via CDN for Player.glb loading -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+</head>
+<body>
+
+    <!-- Original Canvas Backdrop Assets -->
+    <div class="background-container"></div>
+    <div id="canvas-container"></div>
+
+    <!-- UI Overlay Layer -->
+    <div class="ui-layer">
+        
+        <!-- Left Side Dashboard Modules (Solid Black Background Only) -->
+        <div class="left-menu">
+            <div class="menu-box" onclick="console.log('Customize clicked')">
+                <img src="Player.png" alt="Customize" class="menu-icon" onerror="this.style.display='none'">
+            </div>
+            <div class="menu-box" onclick="console.log('Loadout clicked')">
+                <img src="Loadout.png" alt="Loadout" class="menu-icon" onerror="this.style.display='none'">
+            </div>
+            <!-- CHANGED: Clicking this now loads bloodweb.html directly -->
+            <div class="menu-box" onclick="window.location.href='bloodweb.html'">
+                <img src="Bloodweb.png" alt="Bloodweb" class="menu-icon" onerror="this.style.display='none'">
+            </div>
+        </div>
+
+        <!-- Center Structural Text '+' Slots -->
+        <div class="survivor-slots">
+            <span class="plus-slot">+</span>
+            <span class="plus-slot">+</span>
+            <span class="plus-slot">+</span>
+        </div>
+
+        <!-- Upper Right Profile Tracker Layer -->
+        <div class="top-right-hud">
+            <div class="currency-box">
+                <span>0</span>
+                <img src="Bloodpoints.png" alt="Bloodpoints" class="bloodpoints-icon" onerror="this.style.display='none'">
+            </div>
+            <div class="player-profile">
+                <img src="Player.png" alt="Profile" class="profile-img" onerror="this.style.display='none'">
+                <span class="player-name">PlayerName</span>
+                <span class="player-level">Level 1</span>
+            </div>
+        </div>
+
+        <!-- Left Nav Exit Command (Using Back.png Asset) -->
+        <div class="bottom-left-panel">
+            <button class="nav-btn" onclick="window.location.href='menu.html'">
+                <img src="Back.png" alt="Back" class="btn-img-back">
+            </button>
+        </div>
+
+        <!-- Right Match Navigation Cluster (Using Start.png Asset) -->
+        <div class="bottom-right-panel">
+            <div class="queue-text" id="queue-timer-display">Estimated que time: 19s</div>
+            <button class="nav-btn" id="start-matchmaker-btn">
+                <img src="Start.png" alt="Start" class="btn-img-start">
+            </button>
+        </div>
+
+    </div>
+    <script>
+        // Interactive 19s Countdown Timer to game.html Redirection
+        let queueInterval = null;
+        let remainingSeconds = 19;
+        const startBtn = document.getElementById('start-matchmaker-btn');
+        const timerDisplay = document.getElementById('queue-timer-display');
+
+        startBtn.addEventListener('click', () => {
+            // Reset state cleanly whenever Start is clicked
+            clearInterval(queueInterval);
+            remainingSeconds = 19;
+            timerDisplay.style.display = 'block';
+            timerDisplay.textContent = `Estimated que time: ${remainingSeconds}s`;
+
+            queueInterval = setInterval(() => {
+                remainingSeconds--;
+                timerDisplay.textContent = `Estimated que time: ${remainingSeconds}s`;
+                
+                if (remainingSeconds <= 0) {
+                    clearInterval(queueInterval);
+                    setTimeout(() => {
+                        window.location.href = 'game.html';
+                    }, 500);
+                }
+            }, 1000);
+        });
+
+        // Load model asset using Three.js loader engine
+        try {
+            const container = document.getElementById('canvas-container');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 100);
+            camera.position.set(0, 2, 5);
+
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+
+            const light = new THREE.AmbientLight(0xffffff, 1);
+            scene.add(light);
+
+            const loader = new THREE.GLTFLoader();
+            loader.load('Player.glb', function(gltf) {
+                const model = gltf.scene;
+                model.position.set(0, 0, 0);
+                scene.add(model);
+
+                if(gltf.animations && gltf.animations.length > 0) {
+                    const mixer = new THREE.AnimationMixer(model);
+                    const action = mixer.clipAction(gltf.animations[0]);
+                    action.play();
+                    
+                    const clock = new THREE.Clock();
+                    function animLoop() {
+                        requestAnimationFrame(animLoop);
+                        mixer.update(clock.getDelta());
+                        renderer.render(scene, camera);
+                    }
+                    animLoop();
+                } else {
+                    renderer.render(scene, camera);
+                }
+            }, undefined, function(e) { console.log('Player.glb animation configuration standby.'); });
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        } catch(err) {
+            console.log("Canvas initialization setup complete.");
+        }
+    </script>
+</body>
+</html>
