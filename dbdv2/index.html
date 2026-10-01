@@ -6,15 +6,13 @@
 <title>DEAD BY DAYLIGHT</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif; user-select:none; }
-html, body { width:100%; height:100%; overflow:hidden; }
+html, body { width:100%; height:100%; overflow:hidden; cursor:pointer; }
 
-/* Background */
 .bg {
   position:absolute; inset:0;
   background: url('./Background.jpg') center/cover no-repeat black;
 }
 
-/* Centered Logo */
 .logo {
   position:absolute;
   top:45%; left:50%;
@@ -23,14 +21,12 @@ html, body { width:100%; height:100%; overflow:hidden; }
   object-fit:contain;
 }
 
-/* Bottom fixed text area */
 .bottom-container {
   position:absolute;
   bottom:10%; width:100%; text-align:center;
   color:white; text-shadow:0 0 8px rgba(0,0,0,0.9);
 }
 
-/* Title — ALWAYS visible */
 .game-title {
   font-size:clamp(2rem,6vw,4rem);
   font-weight:bold;
@@ -38,14 +34,12 @@ html, body { width:100%; height:100%; overflow:hidden; }
   margin-bottom:0.3em;
 }
 
-/* Tap hint — shown first */
 .tap-hint {
   font-size:clamp(1.2rem,3vw,2rem);
   opacity:0.8;
   animation:pulse 1.5s infinite;
 }
 
-/* Loading status — hidden until tapped */
 .loading-status {
   font-size:clamp(1rem,2.5vw,1.8rem);
   color:#ddd;
@@ -74,21 +68,19 @@ html, body { width:100%; height:100%; overflow:hidden; }
 <img src="./Logo.png" alt="Logo" class="logo" id="logo">
 
 <div class="bottom-container">
-  <!-- ALWAYS SHOWS -->
   <div class="game-title">DEAD BY DAYLIGHT</div>
-  
-  <!-- Tap hint -->
   <div class="tap-hint" id="tapHint">Tap to continue.</div>
-  
-  <!-- Loading messages -->
   <div class="loading-status" id="status1">Connecting to server<span class="spinner">...</span></div>
   <div class="loading-status" id="status2">Downloading Player data<span class="spinner">...</span></div>
   <div class="loading-status" id="status3">Loading bloodweb<span class="spinner">...</span></div>
   <div class="loading-status" id="status4">Loading Shaders<span class="spinner">...</span></div>
 </div>
 
+<!-- Audio with fallback + preload fix -->
 <audio id="bgMusic" loop preload="auto">
   <source src="./Loading.mp3" type="audio/mpeg">
+  <source src="./Loading.mp3" type="audio/mp3">
+  Your browser does not support audio.
 
 
 <script>
@@ -101,39 +93,51 @@ const statuses = [
   document.getElementById('status4')
 ];
 
-// Timing (ms) — adjust to your liking
 const delays = [2000, 2500, 2000, 1800];
-
 let started = false;
+
+// Pre-load audio early
+bgMusic.load();
+bgMusic.volume = 0.8;
 
 async function startLoading() {
   if (started) return;
   started = true;
 
-  // Hide tap hint
   tapHint.style.display = 'none';
 
-  // Start & KEEP music looping
-  bgMusic.volume = 0.7;
+  // FORCE music start — multiple methods
   try {
     bgMusic.currentTime = 0;
-    await bgMusic.play();
-  } catch(e) {
-    console.log('Audio note — will play once interaction happens', e);
+    const playPromise = bgMusic.play();
+    if (playPromise !== undefined) {
+      await playPromise;
+      console.log('✅ Music playing');
+    }
+  } catch (err) {
+    console.log('🔄 Retrying audio...', err);
+    // Fallback: recreate audio element
+    bgMusic.remove();
+    const newAudio = document.createElement('audio');
+    newAudio.id = 'bgMusic';
+    newAudio.loop = true;
+    newAudio.preload = 'auto';
+    newAudio.volume = 0.8;
+    newAudio.src = './Loading.mp3';
+    document.body.appendChild(newAudio);
+    await newAudio.play();
   }
 
-  // Show each loading message below the title
+  // Loading sequence
   for (let i = 0; i < statuses.length; i++) {
     statuses[i].style.display = 'block';
     await new Promise(r => setTimeout(r, delays[i]));
     statuses[i].style.display = 'none';
   }
 
-  // Go to game
   window.location.href = './game.html';
 }
 
-// Tap/click to start
 document.body.addEventListener('click', startLoading);
 document.body.addEventListener('touchstart', startLoading, { passive: true });
 </script>
