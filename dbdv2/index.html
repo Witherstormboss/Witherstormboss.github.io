@@ -3,50 +3,66 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dead by Daylight Loading</title>
+<title>DEAD BY DAYLIGHT</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif; user-select:none; }
 html, body { width:100%; height:100%; overflow:hidden; }
 
-/* Fullscreen background — FIXED path handling */
+/* Background */
 .bg {
   position:absolute; inset:0;
   background: url('./Background.jpg') center/cover no-repeat black;
 }
 
-/* Centered logo */
+/* Centered Logo */
 .logo {
   position:absolute;
-  top:50%; left:50%;
+  top:45%; left:50%;
   transform:translate(-50%, -50%);
-  max-width:60%; max-height:50%;
+  max-width:55%; max-height:45%;
   object-fit:contain;
-  transition:opacity 0.3s;
 }
 
-/* Bottom text */
-.bottom-text {
+/* Bottom fixed text area */
+.bottom-container {
   position:absolute;
   bottom:10%; width:100%; text-align:center;
   color:white; text-shadow:0 0 8px rgba(0,0,0,0.9);
 }
-.game-title { font-size:clamp(2rem,6vw,4rem); font-weight:bold; margin-bottom:0.5em; }
-.tap-hint { font-size:clamp(1.2rem,3vw,2rem); opacity:0.8; animation:pulse 1.5s infinite; }
+
+/* Title — ALWAYS visible */
+.game-title {
+  font-size:clamp(2rem,6vw,4rem);
+  font-weight:bold;
+  letter-spacing:2px;
+  margin-bottom:0.3em;
+}
+
+/* Tap hint — shown first */
+.tap-hint {
+  font-size:clamp(1.2rem,3vw,2rem);
+  opacity:0.8;
+  animation:pulse 1.5s infinite;
+}
+
+/* Loading status — hidden until tapped */
+.loading-status {
+  font-size:clamp(1rem,2.5vw,1.8rem);
+  color:#ddd;
+  display:none;
+}
+
+.spinner {
+  display:inline-block;
+  margin-left:0.5em;
+  animation:spin 1s linear infinite;
+}
 
 @keyframes pulse {
   0%,100% { opacity:0.6; }
   50% { opacity:1; }
 }
 
-/* Status messages */
-.status {
-  position:absolute;
-  bottom:18%; width:100%; text-align:center;
-  color:#eee; font-size:clamp(1rem,2.5vw,1.8rem);
-  text-shadow:0 0 6px rgba(0,0,0,0.9);
-  display:none;
-}
-.spinner { display:inline-block; margin-left:0.5em; animation:spin 1s linear infinite; }
 @keyframes spin {
   to { transform:rotate(360deg); }
 }
@@ -55,27 +71,29 @@ html, body { width:100%; height:100%; overflow:hidden; }
 <body>
 
 <div class="bg"></div>
-<img src="./Logo.png" alt="Logo" class="logo" id="logo" onerror="this.style.border='2px solid red'; console.error('Logo failed to load — check filename & capitalization!')">
+<img src="./Logo.png" alt="Logo" class="logo" id="logo">
 
-<div class="bottom-text" id="startScreen">
-  <div class="game-title">Dead by Daylight</div>
-  <div class="tap-hint">Tap to continue.</div>
+<div class="bottom-container">
+  <!-- ALWAYS SHOWS -->
+  <div class="game-title">DEAD BY DAYLIGHT</div>
+  
+  <!-- Tap hint -->
+  <div class="tap-hint" id="tapHint">Tap to continue.</div>
+  
+  <!-- Loading messages -->
+  <div class="loading-status" id="status1">Connecting to server<span class="spinner">...</span></div>
+  <div class="loading-status" id="status2">Downloading Player data<span class="spinner">...</span></div>
+  <div class="loading-status" id="status3">Loading bloodweb<span class="spinner">...</span></div>
+  <div class="loading-status" id="status4">Loading Shaders<span class="spinner">...</span></div>
 </div>
-
-<div class="status" id="status1">Connecting to server<span class="spinner">...</span></div>
-<div class="status" id="status2">Downloading Player data<span class="spinner">...</span></div>
-<div class="status" id="status3">Loading bloodweb<span class="spinner">...</span></div>
-<div class="status" id="status4">Loading Shaders<span class="spinner">...</span></div>
 
 <audio id="bgMusic" loop preload="auto">
   <source src="./Loading.mp3" type="audio/mpeg">
-  Your browser does not support audio.
 
 
 <script>
 const bgMusic = document.getElementById('bgMusic');
-const startScreen = document.getElementById('startScreen');
-const logo = document.getElementById('logo');
+const tapHint = document.getElementById('tapHint');
 const statuses = [
   document.getElementById('status1'),
   document.getElementById('status2'),
@@ -83,7 +101,7 @@ const statuses = [
   document.getElementById('status4')
 ];
 
-// Timing in milliseconds — adjust as you like
+// Timing (ms) — adjust to your liking
 const delays = [2000, 2500, 2000, 1800];
 
 let started = false;
@@ -92,31 +110,32 @@ async function startLoading() {
   if (started) return;
   started = true;
 
-  // Hide start screen
-  startScreen.style.display = 'none';
-  
-  // Play music with fallback
-  try { 
-    bgMusic.volume = 0.7;
-    await bgMusic.play(); 
-  } catch(e) { 
-    console.warn('Audio autoplay blocked — that’s normal, tap started it!', e);
+  // Hide tap hint
+  tapHint.style.display = 'none';
+
+  // Start & KEEP music looping
+  bgMusic.volume = 0.7;
+  try {
+    bgMusic.currentTime = 0;
+    await bgMusic.play();
+  } catch(e) {
+    console.log('Audio note — will play once interaction happens', e);
   }
 
-  // Show each status step-by-step
+  // Show each loading message below the title
   for (let i = 0; i < statuses.length; i++) {
     statuses[i].style.display = 'block';
     await new Promise(r => setTimeout(r, delays[i]));
     statuses[i].style.display = 'none';
   }
 
-  // Go to game — FIXED relative path
+  // Go to game
   window.location.href = './game.html';
 }
 
-// Tap/click anywhere to start — BOTH events for mobile + desktop
+// Tap/click to start
 document.body.addEventListener('click', startLoading);
-document.body.addEventListener('touchstart', startLoading, { passive:true });
+document.body.addEventListener('touchstart', startLoading, { passive: true });
 </script>
 
 </body>
