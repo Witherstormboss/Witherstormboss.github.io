@@ -1,146 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DEAD BY DAYLIGHT</title>
-<style>
-* { margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif; user-select:none; }
-html, body { width:100%; height:100%; overflow:hidden; cursor:pointer; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dead By Daylight Mobile Reborn</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
 
-.bg {
-  position:absolute; inset:0;
-  background: url('./Background.jpg') center/cover no-repeat black;
-}
+        body {
+            background: url("Background.png"), url("Background.jpg");
+            background-color: #1a1a1a;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
 
-.logo {
-  position:absolute;
-  top:45%; left:50%;
-  transform:translate(-50%, -50%);
-  max-width:55%; max-height:45%;
-  object-fit:contain;
-}
+        /* === TOP GREY BANNER === */
+        .top-banner {
+            background: linear-gradient(rgba(90,90,90,0.95), rgba(70,70,70,0.95));
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 30px;
+            border-bottom: 2px solid #444;
+        }
 
-.bottom-container {
-  position:absolute;
-  bottom:10%; width:100%; text-align:center;
-  color:white; text-shadow:0 0 8px rgba(0,0,0,0.9);
-}
+        .banner-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
 
-.game-title {
-  font-size:clamp(2rem,6vw,4rem);
-  font-weight:bold;
-  letter-spacing:2px;
-  margin-bottom:0.3em;
-}
+        .banner-logo {
+            height: 60px;
+            width: auto;
+        }
 
-.tap-hint {
-  font-size:clamp(1.2rem,3vw,2rem);
-  opacity:0.8;
-  animation:pulse 1.5s infinite;
-}
+        .banner-title {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            white-space: nowrap;
+        }
 
-.loading-status {
-  font-size:clamp(1rem,2.5vw,1.8rem);
-  color:#ddd;
-  display:none;
-}
+        .banner-center-buttons {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
 
-.spinner {
-  display:inline-block;
-  margin-left:0.5em;
-  animation:spin 1s linear infinite;
-}
+        .banner-link-img {
+            height: 70px;
+            width: auto;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
 
-@keyframes pulse {
-  0%,100% { opacity:0.6; }
-  50% { opacity:1; }
-}
+        .banner-link-img:hover {
+            transform: scale(1.05);
+        }
 
-@keyframes spin {
-  to { transform:rotate(360deg); }
-}
-</style>
+        .banner-avatar {
+            height: 65px;
+            width: auto;
+        }
+
+        /* === MAIN COVER IMAGE === */
+        .cover-container {
+            display: flex;
+            justify-content: center;
+            padding: 25px 15px;
+        }
+
+        .cover-img {
+            max-width: 900px;
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.6);
+        }
+
+        /* === BOTTOM BUTTONS ROW === */
+        .bottom-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            padding: 10px 20px 40px;
+            flex-wrap: wrap;
+        }
+
+        .bottom-link-img {
+            height: 110px;
+            width: auto;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .bottom-link-img:hover {
+            transform: scale(1.05);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .top-banner {
+                flex-wrap: wrap;
+                gap: 15px;
+                justify-content: center;
+                text-align: center;
+                padding: 15px;
+            }
+
+            .banner-title {
+                font-size: 1.3rem;
+            }
+
+            .banner-link-img {
+                height: 55px;
+            }
+
+            .bottom-link-img {
+                height: 90px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- TOP GREY BANNER -->
+    <div class="top-banner">
+        <div class="banner-left">
+            <img src="Logo.png" alt="DBD Logo" class="banner-logo" onerror="this.src='Logo.png'">
+            <span class="banner-title">Dead By Daylight mobile Reborn</span>
+        </div>
 
-<div class="bg"></div>
-<img src="./Logo.png" alt="Logo" class="logo" id="logo">
+        <div class="banner-center-buttons">
+            <!-- News Button Image -->
+            <a href="news.html">
+                <img src="News.jpg" alt="News" class="banner-link-img" onerror="this.src='News.png'">
+            </a>
 
-<div class="bottom-container">
-  <div class="game-title">DEAD BY DAYLIGHT</div>
-  <div class="tap-hint" id="tapHint">Tap to continue.</div>
-  <div class="loading-status" id="status1">Connecting to server<span class="spinner">...</span></div>
-  <div class="loading-status" id="status2">Downloading Player data<span class="spinner">...</span></div>
-  <div class="loading-status" id="status3">Loading bloodweb<span class="spinner">...</span></div>
-  <div class="loading-status" id="status4">Loading Shaders<span class="spinner">...</span></div>
-</div>
+            <!-- Updates Button Image -->
+            <a href="updates.html">
+                <img src="Update.jpg" alt="Updates" class="banner-link-img" onerror="this.src='Update.png'">
+            </a>
+        </div>
 
-<!-- Audio with fallback + preload fix -->
-<audio id="bgMusic" loop preload="auto">
-  <source src="./Loading.mp3" type="audio/mpeg">
-  <source src="./Loading.mp3" type="audio/mp3">
-  Your browser does not support audio.
+        <!-- Player Avatar -->
+        <img src="Player.png" alt="Player Avatar" class="banner-avatar" onerror="this.src='Player.jpg'">
+    </div>
 
+    <!-- MAIN COVER IMAGE -->
+    <div class="cover-container">
+        <img src="Cover.png" alt="Main Game Interface" class="cover-img" onerror="this.src='Cover.jpg'">
+    </div>
 
-<script>
-const bgMusic = document.getElementById('bgMusic');
-const tapHint = document.getElementById('tapHint');
-const statuses = [
-  document.getElementById('status1'),
-  document.getElementById('status2'),
-  document.getElementById('status3'),
-  document.getElementById('status4')
-];
+    <!-- BOTTOM BUTTONS -->
+    <div class="bottom-buttons">
+        <!-- YouTube Button Image -->
+        <a href="https://www.youtube.com/@WitherstormBoss15" target="_blank">
+            <img src="Youtube.jpg" alt="YouTube Channel" class="bottom-link-img" onerror="this.src='Youtube.png'">
+        </a>
 
-const delays = [2000, 2500, 2000, 1800];
-let started = false;
+        <!-- Download Button Image -->
+        <a href="https://www.mediafire.com/file/up5msgxdn0ql8p0/dbdm.apks/file" target="_blank">
+            <img src="Download.jpg" alt="Download" class="bottom-link-img" onerror="this.src='Download.png'">
+        </a>
 
-// Pre-load audio early
-bgMusic.load();
-bgMusic.volume = 0.8;
-
-async function startLoading() {
-  if (started) return;
-  started = true;
-
-  tapHint.style.display = 'none';
-
-  // FORCE music start — multiple methods
-  try {
-    bgMusic.currentTime = 0;
-    const playPromise = bgMusic.play();
-    if (playPromise !== undefined) {
-      await playPromise;
-      console.log('✅ Music playing');
-    }
-  } catch (err) {
-    console.log('🔄 Retrying audio...', err);
-    // Fallback: recreate audio element
-    bgMusic.remove();
-    const newAudio = document.createElement('audio');
-    newAudio.id = 'bgMusic';
-    newAudio.loop = true;
-    newAudio.preload = 'auto';
-    newAudio.volume = 0.8;
-    newAudio.src = './Loading.mp3';
-    document.body.appendChild(newAudio);
-    await newAudio.play();
-  }
-
-  // Loading sequence
-  for (let i = 0; i < statuses.length; i++) {
-    statuses[i].style.display = 'block';
-    await new Promise(r => setTimeout(r, delays[i]));
-    statuses[i].style.display = 'none';
-  }
-
-  window.location.href = './game.html';
-}
-
-document.body.addEventListener('click', startLoading);
-document.body.addEventListener('touchstart', startLoading, { passive: true });
-</script>
-
+        <!-- Tutorial Button Image -->
+        <a href="tutorial.html">
+            <img src="Tutorial.jpg" alt="Tutorial" class="bottom-link-img" onerror="this.src='Tutorial.png'">
+        </a>
+    </div>
 </body>
 </html>
